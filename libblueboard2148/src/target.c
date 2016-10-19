@@ -21,10 +21,10 @@ void target_init(struct target_config cfg)
   // Set the VPB divider.
   switch(cfg.pclk_div)
   {
-    case 1 :
+    case 1 : /* Fpclk = Fcclk */
       VPBDIV = 1; break;
 
-    case 2 :
+    case 2 : /* Fpclk = Fcclk/2 */
       VPBDIV = 2; break;
 
     default: /* Fpclk = Fcclk/4 */
@@ -73,23 +73,23 @@ void target_init(struct target_config cfg)
   // Disable the MAM.
   MAMCR = 0;
 
+  // Set the MAM timing.
+  if (cfg.fcclk < 20000000)
+  {
+    MAMTIM = 1;
+  }
+  else if (cfg.fcclk < 40000000)
+  {
+    MAMTIM = 2;
+  }
+  else
+  {
+    MAMTIM = 3;
+  }
+
   // Set up and enable the MAM if required.
   if (cfg.enable_mam)
   {
-    // Set the MAM timing.
-    if (cfg.fcclk < 20000000)
-    {
-    MAMTIM = 1;
-    }
-    else if (cfg.fcclk < 40000000)
-    {
-      MAMTIM = 2;
-    }
-    else
-    {
-      MAMTIM = 3;
-    }
-
     // Enable the MAM.
     MAMCR = 2;
   }

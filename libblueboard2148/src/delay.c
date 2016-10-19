@@ -10,6 +10,7 @@
 void delay_us(unsigned long time_us)
 {
   unsigned long count = ((1000 * time_us)/(4 * cclk_period_ns));
+  count = (count == 0 ? 1 : count);
   asm volatile (
       "mov r0, %0 \n\t"
       "%=: subs r0, r0, #1 \n\t"
