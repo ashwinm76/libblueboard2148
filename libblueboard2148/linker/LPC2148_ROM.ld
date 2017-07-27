@@ -1,6 +1,6 @@
 
 C_STACK_SIZE   = 512;
-IRQ_STACK_SIZE = 64;
+IRQ_STACK_SIZE = 512;
 FIQ_STACK_SIZE = 64;
 SVC_STACK_SIZE = 64;
 ABT_STACK_SIZE = 64;
@@ -8,7 +8,6 @@ UND_STACK_SIZE = 64;
 
 INPUT(-lblueboard2148)
 INPUT(-llpc2148)
-INPUT(-lgcc)
 
 ENTRY(_start)
 
@@ -38,6 +37,7 @@ SECTIONS
     __data_load__ = LOADADDR(DATA);
     __data_start__ = .;
     *(.data)
+    *(.data*)
     . = ALIGN(4);
     __data_end__ = .;
   } >RAM AT>ROM
@@ -45,6 +45,8 @@ SECTIONS
   .bss : {
     __bss_start__ = . ;
     *(.bss)
+    *(.bss*)
+    *(COMMON)
     . = ALIGN(4);
     __bss_end__ = . ;
   } >RAM

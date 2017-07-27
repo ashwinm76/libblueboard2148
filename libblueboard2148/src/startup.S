@@ -14,6 +14,7 @@
 .code 32
 .section .init
 .global _start
+.extern vic_irq_handler
 
 /*  Vector Table */
     ldr  pc, reset_handler_address
@@ -45,7 +46,10 @@ pabort_handler:
 dabort_handler:
         b  dabort_handler
 irq_handler:
-        b  irq_handler
+		stmfd sp!,{r0-r12,lr}
+        bl vic_irq_handler
+        ldmfd sp!,{r0-r12,lr}
+        subs pc,lr,#4
 fiq_handler:
         b  fiq_handler
 
